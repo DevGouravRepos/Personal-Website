@@ -4,15 +4,15 @@
     nameValidator,
     requiredValidator,
   } from "./utilities/validators.js";
-
+  import { inview } from "./utilities/inview.js";
   import { fade } from "svelte/transition";
 
-  let nameField;
-  let emailField;
-  let msgField;
-  let successMsg;
-  let errorMsg;
-  let submitting = false;
+  let nameField = $state("");
+  let emailField = $state("");
+  let msgField = $state("");
+  let successMsg = $state("");
+  let errorMsg = $state("");
+  let submitting = $state(false);
 
   const onFocus = () => (errorMsg = "");
 
@@ -22,28 +22,24 @@
       !requiredValidator(emailField) ||
       !requiredValidator(msgField)
     ) {
-      errorMsg = "Please fill all the fields.";
+      errorMsg = "Please fill in all fields.";
     } else if (!emailValidator(emailField)) {
-      errorMsg = "Please enter a valid email. i.e abc@xyz.com";
+      errorMsg = "Please enter a valid email, e.g. you@example.com";
     } else if (!nameValidator(nameField)) {
-      errorMsg = "Please enter a valid name";
+      errorMsg = "Please enter a valid name.";
     } else {
       postForm()
         .then(() => {
-          console.log("Form successfully submitted");
-
-          successMsg = "✔️ Thankyou for reaching out.";
-
+          successMsg = "Thanks for reaching out! I'll get back to you soon.";
           setTimeout(() => {
             successMsg = "";
-          }, 2000);
+          }, 3000);
           nameField = emailField = msgField = "";
           submitting = false;
         })
-        .catch((error) => {
-          console.log("Form could not be submitted.");
+        .catch(() => {
           errorMsg =
-            "❌ I am having some issues right now. Please contact me from my social links ";
+            "Something went wrong. Please try my social links instead.";
           submitting = false;
         });
     }
@@ -52,219 +48,278 @@
   async function postForm() {
     submitting = true;
     let formData = new FormData(document.getElementById("contactForm"));
-    const request = await fetch("/", {
+    return fetch("/", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams(formData).toString(),
     });
-    return request;
   }
 </script>
 
-<div class="contact">
-  <div class="header_text">
-    Thanks for taking the time to reach out. How can I help you today?
-  </div>
+<div class="contact" use:inview>
+  <div class="contact-inner">
+    <div class="contact-info" use:inview={{ delay: 0.1 }}>
+      <div class="accent-line"></div>
+      <h2 class="section-title">Let's Talk</h2>
+      <p class="contact-desc">
+        Looking for an architect to design your next platform, review your
+        system's scalability, or lead a technical transformation? Let's
+        connect — I'd love to hear about your challenge.
+      </p>
 
-  <form
-    id="contactForm"
-    name="contact"
-    data-netlify="true"
-    data-netlify-honeypot="bot-field"
-    on:submit|preventDefault={handleOnSubmit}
-  >
-    <div class="form">
+      <div class="contact-detail">
+        <span class="detail-label">Based in</span>
+        <span class="detail-value">Pune, India</span>
+      </div>
+      <div class="contact-detail">
+        <span class="detail-label">Role</span>
+        <span class="detail-value">Technical Architect</span>
+      </div>
+    </div>
+
+    <form
+      id="contactForm"
+      name="contact"
+      data-netlify="true"
+      data-netlify-honeypot="bot-field"
+      onsubmit={(e) => {
+        e.preventDefault();
+        handleOnSubmit();
+      }}
+      use:inview={{ delay: 0.2 }}
+    >
       <input type="hidden" name="form-name" value="contact" />
-
-      <p style="display: none;">
+      <p style="display:none;">
         <label
-          >Don’t fill this out if you’re human: <input
+          >Don't fill this out if you're human: <input
             name="bot-field"
           /></label
         >
       </p>
 
-      <div class="name_input">
-        <label for="">Name</label>
+      <div class="form-group">
+        <label for="name">Name</label>
         <input
           type="text"
           id="name"
           name="name"
-          on:focus={onFocus}
+          placeholder="Your name"
+          onfocus={onFocus}
           bind:value={nameField}
         />
       </div>
 
-      <div class="email_input">
-        <label for="">Email</label>
+      <div class="form-group">
+        <label for="email">Email</label>
         <input
-          type="text"
+          type="email"
           id="email"
           name="email"
-          on:focus={onFocus}
+          placeholder="you@example.com"
+          onfocus={onFocus}
           bind:value={emailField}
         />
       </div>
 
-      <div class="msg_input">
+      <div class="form-group full-width">
         <label for="message">Message</label>
         <textarea
           name="message"
           id="message"
-          rows="6"
-          on:focus={onFocus}
+          rows="5"
+          placeholder="Tell me about your project..."
+          onfocus={onFocus}
           bind:value={msgField}
-        />
+        ></textarea>
       </div>
 
-      {#if !submitting}
-        <button type="submit" class="solid-btn submit-btn">Submit</button>
-      {/if}
+      <div class="form-actions full-width">
+        {#if !submitting}
+          <button type="submit" class="btn-primary submit-btn">
+            Send Message
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        {:else}
+          <button
+            type="button"
+            class="btn-primary submit-btn"
+            disabled
+            aria-label="Sending message"
+          >
+            <span class="spinner"></span>
+            Sending...
+          </button>
+        {/if}
+      </div>
 
-      {#if submitting}
-        <button type="submit" class="border-btn submit-btn">
-          <div class="loadingio-spinner-rolling-g24813jisc">
-            <div class="ldio-vzgzdesljqo">
-              <div />
-            </div>
-          </div>
-        </button>
-      {/if}
-    </div>
-  </form>
-
-  <div class="validation-msg">
-    {#if successMsg}
-      <span in:fade out:fade style="color: green;">{successMsg}</span>
-    {/if}
-
-    {#if errorMsg}
-      <span in:fade out:fade style="color: red;"> {errorMsg}</span>
-    {/if}
+      <div class="validation-msg full-width">
+        {#if successMsg}
+          <span class="msg success" in:fade out:fade>{successMsg}</span>
+        {/if}
+        {#if errorMsg}
+          <span class="msg error" in:fade out:fade>{errorMsg}</span>
+        {/if}
+      </div>
+    </form>
   </div>
 </div>
 
 <style>
   .contact {
+    padding: var(--section-padding);
+    background: var(--bg-secondary);
+    position: relative;
+  }
+
+  .contact::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  .contact-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .contact-desc {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 400px;
+  }
+
+  .contact-detail {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    color: var(--text);
-    font-size: 1.4rem;
-    padding: 4rem 0;
-    background-color: var(--white);
-  }
-
-  .header_text {
-    font-size: 2.5rem;
-    max-width: 900px;
-    text-align: center;
-    padding: 0 1rem;
-  }
-  .form {
-    max-width: 640px;
-    margin-top: 4rem;
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: 50% 50%;
-  }
-
-  .name_input {
-    grid-row: 1;
-    grid-column: 1;
-  }
-  .email_input {
-    grid-row: 1;
-    grid-column: 2;
-  }
-  .msg_input {
-    grid-row: 2;
-    grid-column: 1/3;
-  }
-
-  .submit-btn {
-    grid-row: 3;
-    grid-column: 1/3;
-    justify-self: center;
-    width: 6rem;
-    height: 42px;
-  }
-
-  label {
-    color: rgb(122, 122, 122);
     margin-bottom: 1rem;
   }
 
-  #message {
-    width: 100%;
+  .detail-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .detail-value {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-self: start;
+  }
+
+  .submit-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .validation-msg {
-    margin-top: 1rem;
-    height: 32px;
+    min-height: 1.5rem;
   }
 
-  @keyframes ldio-vzgzdesljqo {
-    0% {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
-  }
-  .ldio-vzgzdesljqo div {
-    position: absolute;
-    width: 57px;
-    height: 57px;
-    border: 7px solid #ffb0bc;
-    border-top-color: transparent;
-    border-radius: 50%;
-  }
-  .ldio-vzgzdesljqo div {
-    animation: ldio-vzgzdesljqo 0.3194888178913738s linear infinite;
-    top: 50px;
-    left: 50px;
-  }
-  .loadingio-spinner-rolling-g24813jisc {
-    width: 32px;
-    height: 32px;
-    display: inline-block;
-    overflow: hidden;
-    background: none;
-  }
-  .ldio-vzgzdesljqo {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform: translateZ(0) scale(0.32);
-    backface-visibility: hidden;
-    transform-origin: 0 0; /* see note above */
-  }
-  .ldio-vzgzdesljqo div {
-    box-sizing: content-box;
+  .msg {
+    font-size: 0.9rem;
+    font-weight: 500;
   }
 
-  @media screen and (max-width: 760px) {
-    .form {
-      padding: 0 0.5rem;
+  .msg.success {
+    color: #34d399;
+  }
+
+  .msg.error {
+    color: #f87171;
+  }
+
+  .form-actions {
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .contact-inner {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
     }
 
-    .name_input {
-      grid-row: 1;
-      grid-column: 1/3;
-    }
-    .email_input {
-      grid-row: 2;
-      grid-column: 1/3;
-    }
-    .msg_input {
-      grid-row: 3;
-      grid-column: 1/3;
-    }
-
-    .submit-btn {
-      grid-row: 4;
-      grid-column: 1/3;
+    form {
+      grid-template-columns: 1fr;
     }
   }
 </style>
