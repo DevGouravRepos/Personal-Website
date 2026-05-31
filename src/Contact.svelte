@@ -327,11 +327,11 @@
   }
 
   .msg.success {
-    color: #34d399;
+    color: var(--success);
   }
 
   .msg.error {
-    color: #f87171;
+    color: var(--error);
   }
 
   .form-actions {

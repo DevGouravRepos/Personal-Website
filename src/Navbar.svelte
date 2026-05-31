@@ -1,12 +1,34 @@
 <script>
   let scrolled = $state(false);
   let mobileOpen = $state(false);
+  let theme = $state('dark');
 
   $effect(() => {
     const onScroll = () => { scrolled = window.scrollY > 50; };
     window.addEventListener('scroll', onScroll, { passive: true });
+    
+    // Retrieve theme on mount
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    theme = savedTheme || (systemPrefersLight ? 'light' : 'dark');
+    updateThemeClass();
+
     return () => window.removeEventListener('scroll', onScroll);
   });
+
+  function toggleTheme() {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', theme);
+    updateThemeClass();
+  }
+
+  function updateThemeClass() {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light-theme');
+    } else {
+      document.documentElement.classList.remove('light-theme');
+    }
+  }
 
   function scrollTo(id) {
     mobileOpen = false;
@@ -24,22 +46,41 @@
       DG<span class="logo-dot">.</span>
     </a>
 
-    <button
-      class="hamburger"
-      class:open={mobileOpen}
-      onclick={() => (mobileOpen = !mobileOpen)}
-      aria-label="Toggle navigation"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
     <ul class:open={mobileOpen}>
       <li><button onclick={() => scrollTo('about')}>About</button></li>
       <li><button onclick={() => scrollTo('projects')}>Projects</button></li>
       <li><button onclick={() => scrollTo('contact')}>Contact</button></li>
     </ul>
+
+    <div class="nav-actions">
+      <button
+        class="theme-toggle"
+        onclick={toggleTheme}
+        aria-label="Toggle theme"
+      >
+        {#if theme === 'dark'}
+          <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        {:else}
+          <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+        {/if}
+      </button>
+
+      <button
+        class="hamburger"
+        class:open={mobileOpen}
+        onclick={() => (mobileOpen = !mobileOpen)}
+        aria-label="Toggle navigation"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
   </div>
 </nav>
 
@@ -51,16 +92,16 @@
     right: 0;
     z-index: 1000;
     padding: 1.2rem 2rem;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: padding 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   }
 
   nav.scrolled {
     padding: 0.8rem 2rem;
-    background: rgba(15, 15, 35, 0.85);
+    background: var(--nav-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid var(--nav-border);
+    box-shadow: var(--nav-shadow);
   }
 
   .nav-inner {
@@ -131,6 +172,45 @@
     width: 60%;
   }
 
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1002;
+  }
+
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    cursor: pointer;
+    background: var(--surface);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0;
+  }
+
+  .theme-toggle:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.08) rotate(15deg);
+    background: var(--surface-hover);
+  }
+
+  .theme-icon {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .theme-toggle:active .theme-icon {
+    transform: scale(0.85);
+  }
+
   .hamburger {
     display: none;
     flex-direction: column;
@@ -165,6 +245,14 @@
   }
 
   @media (max-width: 768px) {
+    nav {
+      padding: 1rem 1.2rem;
+    }
+
+    nav.scrolled {
+      padding: 0.75rem 1.2rem;
+    }
+
     .hamburger {
       display: flex;
     }
@@ -176,13 +264,14 @@
       width: 70%;
       max-width: 300px;
       height: 100vh;
-      background: rgba(15, 15, 35, 0.97);
+      background: var(--nav-mobile-bg);
       backdrop-filter: blur(20px);
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 1rem;
-      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+      border-left: 1px solid var(--border);
     }
 
     ul.open {

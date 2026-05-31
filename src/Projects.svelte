@@ -104,7 +104,7 @@
     transform: translateY(-6px);
     border-color: var(--border-hover);
     background: var(--surface-hover);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 60px rgba(108, 99, 255, 0.06);
+    box-shadow: var(--card-shadow-hover);
   }
 
   .project-card:hover::before {
@@ -178,8 +178,9 @@
     color: var(--text-muted);
     padding: 0.25rem 0.6rem;
     border-radius: 4px;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--tag-bg);
     letter-spacing: 0.02em;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   @media (max-width: 768px) {

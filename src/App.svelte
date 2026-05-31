@@ -36,6 +36,55 @@
     --max-width: 1100px;
     --radius: 12px;
     --radius-lg: 20px;
+
+    /* Theme-specific custom elements */
+    --nav-bg: rgba(15, 15, 35, 0.85);
+    --nav-border: rgba(255, 255, 255, 0.06);
+    --nav-shadow: rgba(0, 0, 0, 0.3);
+    --nav-mobile-bg: rgba(15, 15, 35, 0.97);
+
+    --hero-orb-1: radial-gradient(circle, rgba(108, 99, 255, 0.35), transparent 70%);
+    --hero-orb-2: radial-gradient(circle, rgba(255, 101, 132, 0.2), transparent 70%);
+    --avatar-shadow: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.4));
+
+    --card-shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 60px rgba(108, 99, 255, 0.06);
+    --tag-bg: rgba(255, 255, 255, 0.04);
+    --success: #34d399;
+    --error: #f87171;
+  }
+
+  :global(html.light-theme) {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f5f9;
+    --surface: rgba(15, 23, 42, 0.04);
+    --surface-hover: rgba(15, 23, 42, 0.07);
+    --border: rgba(15, 23, 42, 0.08);
+    --border-hover: rgba(15, 23, 42, 0.14);
+
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #57657a; /* Optimized for WCAG AA compliance (5.1:1 contrast ratio) */
+
+    --nav-bg: rgba(255, 255, 255, 0.85);
+    --nav-border: rgba(15, 23, 42, 0.06);
+    --nav-shadow: rgba(0, 0, 0, 0.05);
+    --nav-mobile-bg: rgba(255, 255, 255, 0.97);
+
+    --hero-orb-1: radial-gradient(circle, rgba(108, 99, 255, 0.12), transparent 70%);
+    --hero-orb-2: radial-gradient(circle, rgba(255, 101, 132, 0.08), transparent 70%);
+    --avatar-shadow: drop-shadow(0 10px 30px rgba(15, 23, 42, 0.15));
+
+    --card-shadow-hover: 0 20px 40px rgba(15, 23, 42, 0.08), 0 0 60px rgba(108, 99, 255, 0.04);
+    --tag-bg: rgba(15, 23, 42, 0.04);
+    --success: #10b981;
+    --error: #e11d48;
+  }
+
+  /* High-end Accessible Focus Ring */
+  :global(*:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
   }
 
   :global(html) {
@@ -50,6 +99,10 @@
     color: var(--text-secondary);
   }
 
+  :global(body, .about, .projects, .contact, footer) {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
   :global(ul) {
     padding: 0;
   }
@@ -61,7 +114,7 @@
     border: 1px solid var(--border);
     color: var(--text-primary);
     font-size: 1rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
   }
 
   :global(input:focus, textarea:focus) {

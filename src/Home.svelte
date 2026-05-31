@@ -38,9 +38,7 @@
           Technical Architect &amp; Cloud Strategist
         </p>
         <p class="hero-desc" style="transition-delay: 0.55s">
-          I design scalable, cloud-native architectures and lead engineering
-          teams to deliver enterprise platforms — from system design &amp;
-          microservices to CI/CD pipelines on AWS.
+          I design scalable, cloud-native architectures and lead engineering teams to build high-performance platforms — from modular microservices and event-driven IoT systems to intelligent AI integrations.
         </p>
         <div class="hero-cta" style="transition-delay: 0.7s">
           <button
@@ -66,9 +64,14 @@
       </div>
     </div>
 
-    <div class="scroll-indicator" class:visible>
+    <button 
+      class="scroll-indicator" 
+      class:visible 
+      onclick={() => scrollToSection("about")}
+      aria-label="Scroll to About Me section"
+    >
       <div class="scroll-line"></div>
-    </div>
+    </button>
   </section>
 
   <section id="about">
@@ -129,11 +132,7 @@
   .orb-1 {
     width: 500px;
     height: 500px;
-    background: radial-gradient(
-      circle,
-      rgba(108, 99, 255, 0.35),
-      transparent 70%
-    );
+    background: var(--hero-orb-1);
     top: -10%;
     right: -5%;
   }
@@ -141,11 +140,7 @@
   .orb-2 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(
-      circle,
-      rgba(255, 101, 132, 0.2),
-      transparent 70%
-    );
+    background: var(--hero-orb-2);
     bottom: -10%;
     left: -5%;
     animation-delay: -4s;
@@ -289,8 +284,8 @@
     max-width: 310px;
     position: relative;
     top: 6px;
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.4));
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    filter: var(--avatar-shadow);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
   }
 
   .avatar-ring:hover .avatar {
@@ -305,6 +300,15 @@
     transform: translateX(-50%);
     opacity: 0;
     transition: opacity 1s ease 1.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .scroll-indicator:hover .scroll-line {
+    background: linear-gradient(to bottom, var(--accent-pink), transparent);
+    height: 60px;
   }
 
   .scroll-indicator.visible {

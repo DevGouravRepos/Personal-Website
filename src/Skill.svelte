@@ -2,18 +2,18 @@
   import { inview } from "./utilities/inview.js";
 
   const skills = [
-    "System Design",
-    "Microservices",
+    "System Design & Scaling",
+    "AI Agents & LLM Orchestration",
+    "Model Context Protocol (MCP)",
+    "Code Harnesses & Sandbox Execution",
+    "RAG & Semantic Pipelines",
+    "Microservices / Event-Driven",
     "AWS (Solutions Architect)",
-    "Golang",
-    "Angular",
+    "Golang & TypeScript",
     "Docker & Kubernetes",
-    "CI/CD Pipelines",
-    "Event-Driven Architecture",
-    "API Gateway & GraphQL",
-    "Terraform / IaC",
-    "Observability & Monitoring",
-    "TypeScript",
+    "CI/CD / Terraform IaC",
+    "GraphQL & API Gateways",
+    "Observability (APM & Metrics)",
   ];
 </script>
 
@@ -22,21 +22,16 @@
     <div class="about-header">
       <div class="accent-line"></div>
       <h2 class="section-title">About Me</h2>
-      <p class="section-subtitle">From writing code to designing systems at scale.</p>
+      <p class="section-subtitle">Building scalable cloud platforms and integrating modern, intelligent workflows.</p>
     </div>
 
     <div class="about-grid">
       <div class="about-text" use:inview={{ delay: 0.15 }}>
         <p>
-          Hello! I'm Dev — a technical architect who thrives on turning complex
-          business problems into clean, scalable system designs. My journey
-          started in 2012 building college websites, which sparked a deep
-          curiosity for how software systems work end-to-end.
+          Hello! I'm Dev — a technical architect focused on building clean, resilient backend architectures and cloud-native solutions. I love taking complex, messy business problems and turning them into scalable, well-structured system designs.
         </p>
         <p>
-          Over 10+ years I've progressed from hands-on development to
-          architecting distributed systems and leading cross-functional
-          engineering teams. Today I work as a <strong>Technical Architect</strong> at
+          Over the past 10+ years, I’ve progressed from hands-on software development to architecting distributed platforms and leading cross-functional engineering teams. Today, I work as a <strong>Technical Architect</strong> at
           <a
             href="https://www.siemens.com/en-us/products/building-x/"
             target="_blank"
@@ -45,8 +40,10 @@
           >
             Siemens Ltd. (BuildingX)
           </a>
-          in Pune, India — designing cloud-native platforms that serve
-          thousands of users across the globe.
+          in Pune, India. Here, I design IoT data visualizers and template-driven reporting engines that ingest and analyze real-time telemetry from over 500+ smart buildings worldwide.
+        </p>
+        <p>
+          Currently, my technical focus is on backend efficiency, event-driven microservices (primarily using Golang and AWS), and exploring the practical application of AI technologies—like setting up secure <strong>Model Context Protocol (MCP)</strong> endpoints, orchestrating <strong>intelligent chat agents</strong>, and building semantic search tools that bring real value to developers and clients.
         </p>
       </div>
 
